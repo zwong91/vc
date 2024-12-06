@@ -128,7 +128,7 @@ export default function Home() {
   type History = HistoryItem[];
 
   const [history, setHistory] = useState<History>([]);
-  const SOCKET_URL = "wss://192.168.31.41:29999/stream-vc";
+  const SOCKET_URL = "wss://gtp.aleopool.cc/stream-vc";
 
   useEffect(() => {
     let wakeLock: WakeLockSentinel | null = null;
