@@ -11,6 +11,7 @@ export default function Home() {
   const [audioQueue, setAudioQueue] = useState<Blob[]>([]);
   const [currentAudioElement, setCurrentAudioElement] = useState<HTMLAudioElement | null>(null);
   const [audioDuration, setAudioDuration] = useState<number>(0); // State to track audio duration
+  const [connectionStatus, setConnectionStatus] = useState<string>("Connecting..."); // State to track connection status
 
   let audioContext: AudioContext | null = null;
   let audioBufferQueue: AudioBuffer[] = [];
@@ -127,7 +128,7 @@ export default function Home() {
   type History = HistoryItem[];
 
   const [history, setHistory] = useState<History>([]);
-  const SOCKET_URL = "wss://gtp.aleopool.cc/stream-vc";
+  const SOCKET_URL = "wss://gtp.aleopool.cc/stream";
 
   useEffect(() => {
     let wakeLock: WakeLockSentinel | null = null;
@@ -184,6 +185,7 @@ export default function Home() {
 
             websocket.onopen = () => {
               console.log("client connected to websocket");
+              setConnectionStatus("Connected");
 
               const recorder = new RecordRTC(stream, {
                 type: 'audio',
@@ -254,6 +256,7 @@ export default function Home() {
 
             websocket.onclose = () => {
               console.log("WebSocket connection closed, attempting to reconnect...");
+              setConnectionStatus("Reconnecting...");
               setTimeout(reconnectWebSocket, 5000);
             };
 
@@ -313,6 +316,8 @@ export default function Home() {
         ></div>
         <br />
         <div>当前音频时长: {audioDuration.toFixed(2)} 秒</div>
+        <br />
+        <div>WebSocket状态: {connectionStatus}</div>
       </div>
     </>
   );
